@@ -22,7 +22,7 @@ import { useColumStore, useTaskStore } from '../../store';
 import './Board.scss';
 
 export const Board = () => {
-  const { columns, addColumn, setColumns, getColumns } = useColumStore();
+  const { columns, addColumn, setColumns } = useColumStore();
   const columnsId = columns.map(column => column.id);
 
   const [activeColumn, setActiveColumn] = useState<IColumn | null>(null);
@@ -68,8 +68,6 @@ export const Board = () => {
     };
 
     addColumn(newColumn);
-
-    console.log('col', getColumns());
   };
 
   const onDragStart = (event: DragStartEvent) => {

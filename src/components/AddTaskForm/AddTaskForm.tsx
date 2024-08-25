@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import {
+  type Control,
   Controller,
   FieldErrors,
-  UseFieldArrayReturn,
-  UseFormHandleSubmit,
-  UseFormRegister,
+  type UseFieldArrayReturn,
+  type UseFormHandleSubmit,
+  type UseFormRegister,
 } from 'react-hook-form';
 import { HiXMark } from 'react-icons/hi2';
 import Select, { components } from 'react-select';
@@ -24,7 +25,7 @@ interface AddTaskFormProps {
   register: UseFormRegister<TaskFormSchemaType>;
   errors: FieldErrors<TaskFormSchemaType>;
   useField: UseFieldArrayReturn<TaskFormSchemaType>;
-  control: any;
+  control: Control<any>;
 }
 
 const customStyles = {

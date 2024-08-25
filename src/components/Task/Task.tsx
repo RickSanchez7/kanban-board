@@ -40,9 +40,7 @@ export const Task: FC<TaskProps> = ({ task, activeTask }) => {
     const a = document.getElementById(task.id);
     a?.classList.add('draggable');
     return (
-      <div ref={setNodeRef} style={style} className='task-placeholder'>
-        <h4>{task.title}</h4>
-      </div>
+      <div ref={setNodeRef} style={style} className='task-placeholder'></div>
     );
   }
 
