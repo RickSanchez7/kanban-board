@@ -1,0 +1,14 @@
+@import '/src/styles/variables.scss';
+
+.input {
+  border: 1px solid $color-grey-300;
+  background-color: $main;
+  border-radius: $border-radius-sm;
+  padding: 0.8rem 1.2rem;
+  box-shadow: $shadow-sm;
+  color: $color-grey-0;
+
+  &:focus {
+    outline: 1px solid $purple;
+  }
+}

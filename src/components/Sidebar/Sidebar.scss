@@ -1,0 +1,17 @@
+@import '/src/styles/variables.scss';
+
+.sidebar {
+  background-color: $main;
+  color: white;
+  min-width: 250px;
+  max-width: 250px;
+  transform: translateX(0);
+  padding: 1rem;
+  border-right: 1px $gray solid;
+
+  &-title {
+    color: $gray;
+    font-size: 0.8rem;
+    margin-top: 1rem;
+  }
+}

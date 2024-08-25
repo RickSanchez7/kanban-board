@@ -1,0 +1,23 @@
+@import '/src/styles/variables.scss';
+
+.column {
+  background-color: $background;
+  height: 100%;
+  border-radius: 5px;
+
+  &-title {
+    margin-bottom: 0.5rem;
+    color: $gray;
+    margin: 0.2rem 0.5rem;
+  }
+  &-container {
+    min-width: 200px;
+    height: 80%;
+  }
+}
+
+.column-placeholder {
+  height: 100%;
+  border: 1px $purple solid;
+  border-radius: 5px;
+}

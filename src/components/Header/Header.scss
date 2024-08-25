@@ -1,0 +1,36 @@
+@import '/src/styles/variables.scss';
+
+.header {
+  background-color: $main;
+  width: 100%;
+  padding: 1rem;
+  border-bottom: 1px $gray solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-title {
+    color: white;
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    background-color: $purple;
+    border-radius: 25px;
+    color: white;
+    padding: 0.8rem;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    gap: 0.2rem;
+
+    &:disabled {
+      opacity: 0.7;
+      transition: none;
+    }
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}

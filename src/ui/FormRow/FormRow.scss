@@ -1,0 +1,32 @@
+@import '/src/styles/variables.scss';
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem 0;
+
+  &-label {
+    margin-bottom: 0.5rem;
+    color: $color-grey-0;
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  &:has(button) {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &-error {
+    margin-top: 5px;
+    color: $color-red-700;
+    font-size: 1rem;
+  }
+}
