@@ -33,7 +33,7 @@ export const Board = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5,
+        distance: 3,
       },
     })
   );
@@ -108,7 +108,9 @@ export const Board = () => {
 
       tasks[activeTaskIndex].columnId = overId.toString();
 
-      setTasks(arrayMove(tasks, activeTaskIndex, activeTaskIndex));
+      const overTaskIndex = tasks.findIndex(tas => tas.id === overId);
+
+      setTasks(arrayMove(tasks, activeTaskIndex, overTaskIndex));
     }
   };
 

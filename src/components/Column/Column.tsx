@@ -29,16 +29,12 @@ export const Column: FC<ColumnProps> = ({
       type: 'column',
       column,
     },
-    transition: {
-      duration: 150, // milliseconds
-      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-    },
   });
   const { tasks } = useTaskStore();
 
   const filteredTasks = tasks.filter(task => task.columnId === column.id);
 
-  const tasksId = tasks.map(task => task.id);
+  const tasksId = filteredTasks.map(task => task.id);
 
   const style = {
     transition,
@@ -50,7 +46,6 @@ export const Column: FC<ColumnProps> = ({
       <div ref={setNodeRef} style={style} className='column-placeholder'>
         <div className='column-container'>
           <h3 className='column-title'>{column.title}</h3>
-          {/* <Task /> */}
         </div>
       </div>
     );
@@ -59,7 +54,7 @@ export const Column: FC<ColumnProps> = ({
   return (
     <div ref={setNodeRef} style={style} className='column'>
       <div {...attributes} {...listeners} className='column-container'>
-        <h3 className='column-title'>{`${column.title} (${tasks.length})`}</h3>
+        <h3 className='column-title'>{`${column.title} (${filteredTasks.length})`}</h3>
         <SortableContext items={tasksId}>
           {filteredTasks.map(task => (
             <Task key={task.id} task={task} />

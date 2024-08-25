@@ -16,10 +16,6 @@
   justify-content: center;
   cursor: pointer;
 
-  &-draggable {
-    cursor: grabbing;
-  }
-
   h4 {
     font-size: 1rem;
     color: $color-grey-100;
@@ -41,4 +37,8 @@
     font-size: 1rem;
     color: $color-grey-100;
   }
+}
+
+.draggable {
+  cursor: grabbing;
 }

@@ -24,10 +24,6 @@ export const Task: FC<TaskProps> = ({ task, activeTask }) => {
       type: 'task',
       task,
     },
-    transition: {
-      duration: 150, // milliseconds
-      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-    },
   });
 
   const style = {
@@ -36,6 +32,8 @@ export const Task: FC<TaskProps> = ({ task, activeTask }) => {
   };
 
   if (isDragging && !activeTask) {
+    const a = document.getElementById(task.id);
+    a?.classList.add('draggable');
     return (
       <div ref={setNodeRef} style={style} className='task-placeholder'>
         <h4>{task.title}</h4>
@@ -58,6 +56,9 @@ export const Task: FC<TaskProps> = ({ task, activeTask }) => {
     return <div></div>;
   }
 
+  const a = document.getElementById(task.id);
+  a?.classList.remove('draggable');
+
   const subTaskLength = task.subTasks?.length;
 
   return (
@@ -67,6 +68,7 @@ export const Task: FC<TaskProps> = ({ task, activeTask }) => {
       {...attributes}
       {...listeners}
       className='task'
+      id={task.id}
     >
       <h4>{task.title}</h4>
       {!!subTaskLength && (
