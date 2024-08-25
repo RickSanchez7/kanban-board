@@ -3,6 +3,9 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 import { ITask } from '../../models/Task';
+import { useTaskStore } from '../../store';
+import { Dropdown } from '../../ui/Dropdown';
+
 import './Task.scss';
 
 interface TaskProps {
@@ -11,6 +14,8 @@ interface TaskProps {
 }
 
 export const Task: FC<TaskProps> = ({ task, activeTask }) => {
+  const { deleteTask } = useTaskStore();
+
   const {
     setNodeRef,
     attributes,
@@ -56,10 +61,21 @@ export const Task: FC<TaskProps> = ({ task, activeTask }) => {
     return <div></div>;
   }
 
+  const handleDeleteTask = () => {
+    deleteTask(task.id);
+  };
+
   const a = document.getElementById(task.id);
   a?.classList.remove('draggable');
 
   const subTaskLength = task.subTasks?.length;
+
+  const itemlist = [
+    {
+      name: 'delete',
+      callback: handleDeleteTask,
+    },
+  ];
 
   return (
     <div
@@ -69,13 +85,19 @@ export const Task: FC<TaskProps> = ({ task, activeTask }) => {
       {...listeners}
       className='task'
       id={task.id}
+      onClick={() => console.log('task')}
     >
-      <h4>{task.title}</h4>
-      {!!subTaskLength && (
-        <p className='subtasks'>
-          {numberOfSubTasksChecked()} of {subTaskLength} subtasks
-        </p>
-      )}
+      <div>
+        <h4>{task.title}</h4>
+        {!!subTaskLength && (
+          <p className='subtasks'>
+            {numberOfSubTasksChecked()} of {subTaskLength} subtasks
+          </p>
+        )}
+      </div>
+      <div className='task-dropdown'>
+        <Dropdown itemlist={itemlist} />
+      </div>
     </div>
   );
 };

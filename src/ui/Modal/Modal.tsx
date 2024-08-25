@@ -2,7 +2,7 @@ import { cloneElement, createContext, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 
-import { useOutsideClick } from '../../components/hooks/useClickOutside';
+import { useOutsideClick } from '../../hooks/useClickOutside';
 import type { ModalProps, OpenProps, WindowProps } from '../../models';
 
 import './Modal.scss';

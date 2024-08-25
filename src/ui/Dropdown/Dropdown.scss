@@ -1,0 +1,54 @@
+@import '/src/styles/variables.scss';
+
+.dropdown {
+  position: relative;
+
+  &-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  &-menu {
+    visibility: hidden;
+    position: absolute;
+    top: 100%;
+    left: 20%;
+    background-color: $main;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(-10px);
+    opacity: 0;
+    border-radius: $border-radius-sm;
+  }
+
+  &-menu.show {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 10;
+  }
+
+  &-item {
+    text-decoration: none;
+    color: $color-grey-100;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out;
+    border-bottom: 1px $color-grey-500 solid;
+    text-align: center;
+
+    &-button {
+      padding: 5px 15px;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}

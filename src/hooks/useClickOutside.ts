@@ -4,7 +4,7 @@ export function useOutsideClick(
   handler: () => void,
   listeningCapturing = true
 ) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<any>(null);
   useEffect(() => {
     function handleClick(e: Event) {
       if (ref.current && !ref.current?.contains(e.target as Node | null)) {

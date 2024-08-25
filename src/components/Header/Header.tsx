@@ -19,7 +19,6 @@ export const Header = () => {
     reset,
     control,
     formState: { errors },
-    unregister,
   } = useForm<TaskFormSchemaType>({
     resolver: zodResolver(TaskFormSchema),
     mode: 'onSubmit',
@@ -40,11 +39,11 @@ export const Header = () => {
       title: data.title,
       description: data.description,
       subTasks: data.subTasks ?? [],
+      taskType: data.taskType,
     });
 
     useField.remove();
     reset();
-    unregister('title');
     onCloseModal?.();
   };
 

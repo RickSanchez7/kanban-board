@@ -8,6 +8,12 @@ export interface ITask {
   title: string;
   description: string;
   subTasks: ISubTask[];
+  taskType: {
+    value: string;
+    label: string;
+    Icon: unknown;
+    style: { color: string };
+  };
 }
 
 interface ISubTask {
@@ -15,7 +21,7 @@ interface ISubTask {
   isChecked: boolean;
 }
 
-export enum TaskTypes {
+export const enum TaskTypes {
   BUF_FIX = 'bugFix',
   TASK = 'task',
   STORY = 'story',

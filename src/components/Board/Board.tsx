@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FaCirclePlus } from 'react-icons/fa6';
 import {
@@ -22,13 +22,33 @@ import { useColumStore, useTaskStore } from '../../store';
 import './Board.scss';
 
 export const Board = () => {
-  const { columns, addColumn, setColumns } = useColumStore();
+  const { columns, addColumn, setColumns, getColumns } = useColumStore();
   const columnsId = columns.map(column => column.id);
 
   const [activeColumn, setActiveColumn] = useState<IColumn | null>(null);
 
   const { tasks, setTasks } = useTaskStore();
   const [activeTask, setActiveTask] = useState<ITask | null>(null);
+
+  useLayoutEffect(() => {
+    try {
+      const localTasks = localStorage.getItem('tasks');
+      const localColumns = localStorage.getItem('columns');
+
+      if (localTasks) {
+        const parsedTasks = JSON.parse(localTasks);
+        setTasks(parsedTasks);
+      }
+
+      if (localColumns) {
+        const parsedColumns = JSON.parse(localColumns);
+        setColumns(parsedColumns);
+      }
+    } catch {
+      console.error('error retriving from local storage');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -39,10 +59,17 @@ export const Board = () => {
   );
 
   const handleColumn = () => {
-    addColumn({
+    const colors = ['#49c5e5', '#8672f6', '#6adeac', 'yellow', 'purple'];
+
+    const newColumn = {
       id: Math.floor(Math.random() * 10000000).toString(),
       title: `Column ${columns.length + 1}`,
-    });
+      color: colors[columns.length % colors.length],
+    };
+
+    addColumn(newColumn);
+
+    console.log('col', getColumns());
   };
 
   const onDragStart = (event: DragStartEvent) => {
@@ -72,7 +99,9 @@ export const Board = () => {
 
     const overColumnIndex = columns.findIndex(col => col.id === overId);
 
-    setColumns(arrayMove(columns, activeColumnIndex, overColumnIndex));
+    const movedColumns = arrayMove(columns, activeColumnIndex, overColumnIndex);
+
+    setColumns(movedColumns);
   };
 
   const onDragOver = (event: DragOverEvent) => {
@@ -97,7 +126,9 @@ export const Board = () => {
 
       tasks[activeTaskIndex].columnId = tasks[overTaskIndex].columnId;
 
-      setTasks(arrayMove(tasks, activeTaskIndex, overTaskIndex));
+      const movedTasks = arrayMove(tasks, activeTaskIndex, overTaskIndex);
+
+      setTasks(movedTasks);
     }
 
     const isOverAColumn = over.data.current?.type === 'column';
@@ -110,7 +141,9 @@ export const Board = () => {
 
       const overTaskIndex = tasks.findIndex(tas => tas.id === overId);
 
-      setTasks(arrayMove(tasks, activeTaskIndex, overTaskIndex));
+      const movedTasks = arrayMove(tasks, activeTaskIndex, overTaskIndex);
+
+      setTasks(movedTasks);
     }
   };
 
