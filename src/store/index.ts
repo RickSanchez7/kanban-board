@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { IColumn, ITask } from '../models';
-import { mockColumn, mockTask } from '../mocks';
 
 interface TasksState {
   tasks: ITask[];
@@ -19,7 +18,7 @@ interface ColumnState {
 }
 
 export const useTaskStore = create<TasksState>((set, get) => ({
-  tasks: [mockTask],
+  tasks: [],
   addTask: (task: ITask) =>
     set(state => {
       const tasks = [...state.tasks, task];
@@ -43,7 +42,7 @@ export const useTaskStore = create<TasksState>((set, get) => ({
 }));
 
 export const useColumStore = create<ColumnState>((set, get) => ({
-  columns: [mockColumn],
+  columns: [],
   addColumn: (column: IColumn) =>
     set(state => {
       const columns = [...state.columns, column];
