@@ -12,7 +12,11 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { arrayMove, SortableContext } from '@dnd-kit/sortable';
+import {
+  arrayMove,
+  horizontalListSortingStrategy,
+  SortableContext,
+} from '@dnd-kit/sortable';
 
 import { Column } from '../Column';
 import { IColumn, ITask } from '../../models';
@@ -53,7 +57,7 @@ export const Board = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3,
+        distance: 10,
       },
     })
   );
@@ -86,6 +90,7 @@ export const Board = () => {
     setActiveColumn(null);
     setActiveTask(null);
     const { active, over } = event;
+
     if (!over) return;
 
     const activeId = active.id;
@@ -124,9 +129,7 @@ export const Board = () => {
 
       tasks[activeTaskIndex].columnId = tasks[overTaskIndex].columnId;
 
-      const movedTasks = arrayMove(tasks, activeTaskIndex, overTaskIndex);
-
-      setTasks(movedTasks);
+      setTasks(arrayMove(tasks, activeTaskIndex, overTaskIndex));
     }
 
     const isOverAColumn = over.data.current?.type === 'column';
@@ -139,9 +142,7 @@ export const Board = () => {
 
       const overTaskIndex = tasks.findIndex(tas => tas.id === overId);
 
-      const movedTasks = arrayMove(tasks, activeTaskIndex, overTaskIndex);
-
-      setTasks(movedTasks);
+      setTasks(arrayMove(tasks, activeTaskIndex, overTaskIndex));
     }
   };
 
@@ -154,7 +155,10 @@ export const Board = () => {
       collisionDetection={closestCenter}
     >
       <div className='board'>
-        <SortableContext items={columnsId}>
+        <SortableContext
+          strategy={horizontalListSortingStrategy}
+          items={columnsId}
+        >
           {columns.map(column => (
             <Column key={column.id} column={column} />
           ))}

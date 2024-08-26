@@ -1,6 +1,10 @@
 import { FC, type ReactElement, useState } from 'react';
 import { CSS } from '@dnd-kit/utilities';
-import { SortableContext, useSortable } from '@dnd-kit/sortable';
+import {
+  rectSortingStrategy,
+  SortableContext,
+  useSortable,
+} from '@dnd-kit/sortable';
 import { FaCircle } from 'react-icons/fa6';
 
 import { IColumn } from '../../models/Column';
@@ -41,7 +45,7 @@ export const Column: FC<ColumnProps> = ({
 
   const filteredTasks = tasks.filter(task => task.columnId === column.id);
 
-  const tasksId = filteredTasks.map(task => task.id);
+  const tasksId = tasks.map(task => task.id);
 
   const style = {
     transition,
@@ -84,8 +88,8 @@ export const Column: FC<ColumnProps> = ({
 
   return (
     <div ref={setNodeRef} style={style} className='column'>
-      <div {...attributes} {...listeners} className='column-container'>
-        <div className='column-title-wrapper'>
+      <div {...attributes} className='column-container'>
+        <div {...listeners} className='column-title-wrapper'>
           <h3 className='column-title'>
             <FaCircle
               style={{
@@ -117,7 +121,7 @@ export const Column: FC<ColumnProps> = ({
           </h3>
           <Dropdown itemlist={itemlist} />
         </div>
-        <SortableContext items={tasksId}>
+        <SortableContext strategy={rectSortingStrategy} items={tasksId}>
           {filteredTasks.map(task => (
             <Task key={task.id} task={task} />
           ))}
