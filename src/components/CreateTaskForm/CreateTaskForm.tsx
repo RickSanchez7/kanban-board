@@ -1,31 +1,22 @@
 import { FC } from 'react';
-import {
-  type Control,
-  Controller,
-  FieldErrors,
-  type UseFieldArrayReturn,
-  type UseFormHandleSubmit,
-  type UseFormRegister,
-} from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { HiXMark } from 'react-icons/hi2';
 import Select, { components } from 'react-select';
 
 import { FormRow } from '../../ui/FormRow';
 import { Input } from '../../ui/Input';
-import { TaskFormSchemaType } from '../../schema/TaskForm';
+import { TaskFormSchema, TaskFormSchemaType } from '../../schema/TaskForm';
+import { ITask, typeOptions } from '../../models';
+import { useColumStore, useTaskStore } from '../../store';
+import { useUsersStore } from '../../store/Users';
 
-import './AddTaskForm.scss';
-import { typeOptions } from '../../models';
+import './CreateTaskForm.scss';
 
-interface AddTaskFormProps {
+interface CreateTaskFormProps {
   onCloseModal?: () => void;
-  handleSubmit: UseFormHandleSubmit<TaskFormSchemaType>;
-  handleClick: (data: TaskFormSchemaType, onCloseModal?: () => void) => void;
   title: string;
-  register: UseFormRegister<TaskFormSchemaType>;
-  errors: FieldErrors<TaskFormSchemaType>;
-  useField: UseFieldArrayReturn<TaskFormSchemaType>;
-  control: Control<any>;
+  task?: ITask;
 }
 
 const customStyles = {
@@ -45,20 +36,84 @@ const customStyles = {
   }),
 };
 
-export const AddTaskForm: FC<AddTaskFormProps> = ({
+export const CreateTaskForm: FC<CreateTaskFormProps> = ({
   onCloseModal,
-  handleSubmit,
-  handleClick,
   title,
-  register,
-  errors,
-  useField,
-  control,
+  task,
 }) => {
+  const { addTask, updateTask } = useTaskStore();
+  const { columns } = useColumStore();
+  const { getUsers } = useUsersStore();
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<TaskFormSchemaType>({
+    resolver: zodResolver(TaskFormSchema),
+    mode: 'onSubmit',
+    defaultValues: task?.id
+      ? {
+          ...task,
+          taskType: {
+            ...task.taskType,
+            Icon: task.taskType.Icon as any,
+          },
+          ...(task.assignUser && {
+            assignUser: {
+              id: task.assignUser?.id,
+              name: task.assignUser?.name,
+              position: task.assignUser?.position,
+              label: `${task.assignUser.name} (${task.assignUser.position})`,
+              value: task.assignUser.name,
+            },
+          }),
+        }
+      : {},
+  });
+
+  const useField = useFieldArray({
+    name: 'subTasks',
+    control,
+  });
   const { append, fields, remove } = useField;
 
+  const handleCreateTask = (
+    data: TaskFormSchemaType,
+    onCloseModal?: () => void
+  ): void => {
+    if (task?.id) {
+      updateTask({
+        ...data,
+        id: task.id,
+        columnId: task.columnId,
+        subTasks: data.subTasks ?? [],
+      });
+    } else {
+      addTask({
+        id: Math.floor(Math.random() * 10000000).toString(),
+        columnId: columns[0].id.toString(),
+        title: data.title,
+        description: data.description,
+        subTasks: data.subTasks ?? [],
+        taskType: data.taskType,
+        assignUser: data.assignUser,
+      });
+    }
+
+    useField.remove();
+    reset();
+    onCloseModal?.();
+  };
+
   const handleNewSubtasks = () => {
-    append({ title: '', isChecked: false });
+    append({
+      id: Math.floor(Math.random() * 10000000).toString(),
+      title: '',
+      isChecked: false,
+    });
   };
 
   const handleDeleteSubtasks = (i: number) => {
@@ -83,10 +138,34 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
     </components.SingleValue>
   );
 
+  const users = getUsers().map(user => ({
+    ...user,
+    label: `${user.name} (${user.position})`,
+    value: user.name,
+  }));
+
+  const CustomOptionUsers = (props: any) => {
+    return (
+      <components.Option {...props}>
+        <div key={props.data.label} className='icon-container'>
+          {props.data.label}
+        </div>
+      </components.Option>
+    );
+  };
+
+  const CustomSingleValueUsers = ({ data, ...props }: any) => (
+    <components.SingleValue {...props}>
+      <div key={data.label} className='icon-container'>
+        {data.label}
+      </div>
+    </components.SingleValue>
+  );
+
   return (
     <form
       onSubmit={handleSubmit((data: TaskFormSchemaType) => {
-        handleClick(data, onCloseModal);
+        handleCreateTask(data, onCloseModal);
       })}
       className='task-form'
     >
@@ -156,6 +235,31 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
                 components={{
                   Option: CustomOption,
                   SingleValue: CustomSingleValue,
+                }}
+              />
+            )}
+          />
+        </FormRow>
+        <FormRow
+          label='Users'
+          id='assignUser'
+          error={errors.assignUser?.message}
+        >
+          <Controller
+            control={control}
+            name='assignUser'
+            render={({ field: { onChange, name, value } }) => (
+              <Select
+                styles={customStyles}
+                menuPlacement='top'
+                options={users}
+                isClearable={true}
+                value={value}
+                name={name}
+                onChange={onChange}
+                components={{
+                  Option: CustomOptionUsers,
+                  SingleValue: CustomSingleValueUsers,
                 }}
               />
             )}

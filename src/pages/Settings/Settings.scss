@@ -1,0 +1,11 @@
+@import '/src/styles/variables.scss';
+
+.settings {
+  height: 100%;
+  display: flex;
+  background-color: $main-dark;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  justify-content: flex-start;
+  align-items: flex-start;
+}

@@ -1,7 +1,7 @@
-import './App.scss';
-import { Board } from './components/Board';
+import { Outlet } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
+import './App.scss';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Sidebar />
       <div className='board-container'>
         <Header />
-        <Board />
+        <Outlet />
       </div>
     </main>
   );

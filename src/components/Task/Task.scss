@@ -1,22 +1,21 @@
 @import '/src/styles/variables.scss';
 
 @mixin task-default {
+  display: flex;
   position: relative;
   border-radius: 5px;
   border: 2px;
   padding: 0.5rem;
   margin: 0.5rem 0.2rem 0;
   min-height: 70px;
-  display: flex;
 }
 
 .task {
   @include task-default();
 
   background-color: $main;
-  align-items: center;
+  // align-items: center;
   justify-content: space-between;
-
   cursor: pointer;
 
   h4 {
@@ -24,16 +23,37 @@
     color: $color-grey-100;
   }
 
-  .subtasks {
+  &-left-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &-subtasks {
     margin-top: 0.4rem;
     color: $color-grey-300;
     font-size: 0.7rem;
   }
 
+  &-right-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   &-dropdown {
     padding: 5px;
-    margin-right: -5px;
-    align-self: flex-start;
+  }
+
+  &-user {
+    display: inline-block;
+    color: $color-grey-100;
+    border: $purple 1px solid;
+    text-align: center;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    border-radius: 1.5rem;
   }
 
   svg {

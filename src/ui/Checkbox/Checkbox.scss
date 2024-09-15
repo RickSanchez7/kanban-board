@@ -1,0 +1,12 @@
+@import '/src/styles/variables.scss';
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.8rem;
+  gap: 0.3rem;
+}
+
+.line-through {
+  text-decoration-line: line-through;
+}

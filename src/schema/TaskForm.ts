@@ -1,5 +1,6 @@
 import z from 'zod';
 import { typeOptions } from '../models';
+import { UsersFormSchema } from './UsersForm';
 
 export const TaskFormSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -7,6 +8,7 @@ export const TaskFormSchema = z.object({
   subTasks: z
     .array(
       z.object({
+        id: z.string(),
         title: z.string().min(1, 'Title is required'),
         isChecked: z.boolean().default(false),
       })
@@ -32,6 +34,7 @@ export const TaskFormSchema = z.object({
         message: 'Invalid selection. Please select a valid label.',
       }
     ),
+  assignUser: UsersFormSchema.optional().nullable(),
 });
 
 export type TaskFormSchemaType = z.infer<typeof TaskFormSchema>;

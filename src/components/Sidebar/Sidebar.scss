@@ -1,6 +1,9 @@
 @import '/src/styles/variables.scss';
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: $main;
   color: white;
   min-width: 250px;
@@ -8,10 +11,74 @@
   transform: translateX(0);
   padding: 1rem;
   border-right: 1px $gray solid;
+  transition: all 0.2s ease-in-out;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    line-height: 2.5rem;
+
+    svg {
+      transform: rotate(90deg);
+      font-size: 1.6rem;
+    }
+  }
 
   &-title {
     color: $gray;
     font-size: 0.8rem;
-    margin-top: 1rem;
+    margin: 1.5rem 0 1rem;
+  }
+
+  &-link {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    text-decoration: none;
+    color: $gray;
+    flex: 1;
+    padding: 0.5rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.active {
+  background-color: $purple;
+  color: $color-grey-100;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  animation: animateThis 0.2s ease-in;
+}
+
+.isHidden {
+  min-width: 100px;
+  max-width: 100px;
+}
+
+@keyframes animateThis {
+  0% {
+    width: 50%;
+  }
+  100% {
+    width: 100%;
   }
 }

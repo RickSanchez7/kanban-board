@@ -1,13 +1,14 @@
-import { FC, useRef } from 'react';
+import { type FC, type ReactElement, type ReactNode, useRef } from 'react';
 import { HiDotsVertical } from 'react-icons/hi';
 
-import './Dropdown.scss';
 import { useOutsideClick } from '../../hooks/useClickOutside';
+import './Dropdown.scss';
 
 interface DropdownProps {
   itemlist: {
     name: string;
-    callback: () => void;
+    callback?: () => void;
+    JsxElement?: ({ children }: { children: ReactElement }) => ReactNode;
   }[];
 }
 
@@ -39,16 +40,28 @@ export const Dropdown: FC<DropdownProps> = ({ itemlist }) => {
         <HiDotsVertical />
       </button>
       <ul ref={dropdownRef} className='dropdown-menu'>
-        {itemlist.map(item => (
-          <li key={item.name} className='dropdown-item'>
-            <button
-              className='dropdown-item-button'
-              type='button'
-              aria-label='dropdown-item-button'
-              onClick={item.callback}
-            >
-              {item.name}
-            </button>
+        {itemlist.map(({ name, callback, JsxElement }) => (
+          <li key={name} className='dropdown-item'>
+            {JsxElement ? (
+              <JsxElement>
+                <button
+                  className='dropdown-item-button'
+                  type='button'
+                  aria-label='dropdown-item-button'
+                >
+                  {name}
+                </button>
+              </JsxElement>
+            ) : (
+              <button
+                className='dropdown-item-button'
+                type='button'
+                aria-label='dropdown-item-button'
+                onClick={callback}
+              >
+                {name}
+              </button>
+            )}
           </li>
         ))}
       </ul>

@@ -1,6 +1,7 @@
 import { FaBug, FaTicket, FaJira } from 'react-icons/fa6';
 import { BiTask } from 'react-icons/bi';
 import { GiPlainCircle } from 'react-icons/gi';
+import { IUser } from '../Users';
 
 export interface ITask {
   id: string;
@@ -14,9 +15,11 @@ export interface ITask {
     Icon: unknown;
     style: { color: string };
   };
+  assignUser?: IUser;
 }
 
 interface ISubTask {
+  id: string;
   title: string;
   isChecked: boolean;
 }

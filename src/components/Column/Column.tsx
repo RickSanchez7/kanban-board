@@ -1,11 +1,12 @@
 import { FC, type ReactElement, useState } from 'react';
-import { CSS } from '@dnd-kit/utilities';
-import {
-  rectSortingStrategy,
-  SortableContext,
-  useSortable,
-} from '@dnd-kit/sortable';
 import { FaCircle } from 'react-icons/fa6';
+import {
+  Draggable,
+  DraggableStateSnapshot,
+  DraggingStyle,
+  Droppable,
+  NotDraggingStyle,
+} from 'react-beautiful-dnd';
 
 import { IColumn } from '../../models/Column';
 import { Task } from '../Task';
@@ -16,41 +17,16 @@ import './Column.scss';
 
 interface ColumnProps {
   column: IColumn;
-  activeColumn?: boolean;
+  index: number;
 }
 
-export const Column: FC<ColumnProps> = ({
-  column,
-  activeColumn,
-}): ReactElement => {
+export const Column: FC<ColumnProps> = ({ column, index }): ReactElement => {
   const [titleEditMode, setTitleEditMode] = useState(false);
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: column.id,
-    data: {
-      type: 'column',
-      column,
-    },
-    disabled: titleEditMode,
-  });
   const { tasks } = useTaskStore();
   const { deleteColumn, getColumns, setColumns } = useColumStore();
 
   const filteredTasks = tasks.filter(task => task.columnId === column.id);
-
-  const tasksId = tasks.map(task => task.id);
-
-  const style = {
-    transition,
-    transform: CSS.Transform.toString(transform),
-  };
 
   const handleDeleteCoumn = () => {
     deleteColumn(column.id);
@@ -62,14 +38,6 @@ export const Column: FC<ColumnProps> = ({
       callback: handleDeleteCoumn,
     },
   ];
-
-  if (isDragging && !activeColumn) {
-    return (
-      <div ref={setNodeRef} style={style} className='column-placeholder'>
-        <div className='column-container'></div>
-      </div>
-    );
-  }
 
   const handleTitleEdit = (columnId: string, newTitle: string) => {
     const newColumns = getColumns().map(col => {
@@ -87,46 +55,88 @@ export const Column: FC<ColumnProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style} className='column'>
-      <div {...attributes} className='column-container'>
-        <div {...listeners} className='column-title-wrapper'>
-          <h3 className='column-title'>
-            <FaCircle
-              style={{
-                color: column.color,
-                fontSize: '0.8rem',
-                marginRight: '0.3rem',
-                height: '1.2rem',
-              }}
-            />
-            {titleEditMode ? (
-              <input
-                className='column-title-input'
-                value={column.title}
-                onChange={e => handleTitleEdit(column.id, e.target.value)}
-                autoFocus
-                onKeyDown={e => {
-                  if (e.key !== 'Enter') return;
-                  setTitleEditMode(false);
-                }}
-                onBlur={() => setTitleEditMode(false)}
-              />
-            ) : (
-              <button
-                className='column-title-button'
-                onClick={() => setTitleEditMode(true)}
-              >{`${column.title}`}</button>
-            )}
-            {`(${filteredTasks.length})`}
-          </h3>
-          <Dropdown itemlist={itemlist} />
+    <Draggable key={column.id} draggableId={column.id} index={index}>
+      {provided => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          className='column'
+        >
+          <div className='column-container'>
+            <div className='column-title-wrapper'>
+              <h3 className='column-title'>
+                <FaCircle
+                  style={{
+                    color: column.color,
+                    fontSize: '0.8rem',
+                    marginRight: '0.3rem',
+                    height: '1.2rem',
+                  }}
+                />
+                {titleEditMode ? (
+                  <input
+                    className='column-title-input'
+                    value={column.title}
+                    onChange={e => handleTitleEdit(column.id, e.target.value)}
+                    autoFocus
+                    onKeyDown={e => {
+                      if (e.key !== 'Enter') return;
+                      setTitleEditMode(false);
+                    }}
+                    onBlur={() => setTitleEditMode(false)}
+                  />
+                ) : (
+                  <button
+                    className='column-title-button'
+                    onClick={() => setTitleEditMode(true)}
+                  >{`${column.title}`}</button>
+                )}
+                {`(${filteredTasks.length})`}
+              </h3>
+              <Dropdown itemlist={itemlist} />
+            </div>
+            <Droppable droppableId={column.id} type='TASK'>
+              {provided => (
+                <div ref={provided.innerRef} {...provided.droppableProps}>
+                  {filteredTasks.map((task, i) => (
+                    <Draggable key={task.id} draggableId={task.id} index={i}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getStyle(
+                            provided.draggableProps.style,
+                            snapshot
+                          )}
+                        >
+                          <Task snapshot={snapshot} key={task.id} task={task} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </div>
         </div>
-        <SortableContext strategy={rectSortingStrategy} items={tasksId}>
-          {filteredTasks.map(task => (
-            <Task key={task.id} task={task} />
-          ))}
-        </SortableContext>
-      </div>
-    </div>
+      )}
+    </Draggable>
   );
 };
+
+function getStyle(
+  style: DraggingStyle | NotDraggingStyle | undefined,
+  snapshot: DraggableStateSnapshot
+) {
+  if (!snapshot.isDropAnimating) {
+    return style;
+  }
+  return {
+    ...style,
+    // cannot be 0, but make it super tiny
+    transitionDuration: `0.001s`,
+  };
+}

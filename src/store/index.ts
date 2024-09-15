@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { IColumn, ITask } from '../models';
+import { mockColumn, mockTask } from '../mocks';
 
 interface TasksState {
   tasks: ITask[];
@@ -7,6 +8,7 @@ interface TasksState {
   deleteTask: (taskId: string) => void;
   setTasks: (tasks: ITask[]) => void;
   getTasks: () => ITask[];
+  updateTask: (updatedTask: ITask) => void;
 }
 
 interface ColumnState {
@@ -18,7 +20,7 @@ interface ColumnState {
 }
 
 export const useTaskStore = create<TasksState>((set, get) => ({
-  tasks: [],
+  tasks: [mockTask],
   addTask: (task: ITask) =>
     set(state => {
       const tasks = [...state.tasks, task];
@@ -39,10 +41,22 @@ export const useTaskStore = create<TasksState>((set, get) => ({
       return { tasks };
     }),
   getTasks: () => get().tasks,
+  updateTask: (updatedTask: ITask) =>
+    set(state => {
+      const taskIndex = state.tasks.findIndex(task => task.id === task.id);
+      if (taskIndex !== -1) {
+        const updatedTasks = [...state.tasks];
+        updatedTasks[taskIndex] = updatedTask;
+        return { tasks: updatedTasks };
+      }
+
+      // If no task is found, return the same state (no update)
+      return state;
+    }),
 }));
 
 export const useColumStore = create<ColumnState>((set, get) => ({
-  columns: [],
+  columns: [mockColumn],
   addColumn: (column: IColumn) =>
     set(state => {
       const columns = [...state.columns, column];

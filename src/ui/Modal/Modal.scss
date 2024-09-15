@@ -10,6 +10,8 @@
   box-shadow: $shadow-lg;
   padding: 3.2rem 4rem;
   transition: all 0.5s;
+  overflow-y: auto;
+  max-height: 90vh;
 }
 
 .overlay {
@@ -21,13 +23,12 @@
   background-color: $backdrop-color;
   backdrop-filter: blur(4px);
   z-index: 1000;
-  transition: all 0.5s;
+  transition: background-color 0.5s;
 }
 
 .modal-button {
   background: none;
   border: none;
-  padding: 0.4rem;
   border-radius: $border-radius-sm;
   transform: translateX(0.8rem);
   transition: all 0.2s;
@@ -40,8 +41,8 @@
   }
 
   & svg {
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 2.2rem;
+    height: 2.2rem;
     /* Sometimes we need both */
     /* fill: $color-grey-500;
     stroke: $color-grey-500; */
