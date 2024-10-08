@@ -90,6 +90,7 @@ export const CreateTaskForm: FC<CreateTaskFormProps> = ({
         id: task.id,
         columnId: task.columnId,
         subTasks: data.subTasks ?? [],
+        assignUser: data.assignUser ?? undefined,
       });
     } else {
       addTask({
@@ -99,7 +100,7 @@ export const CreateTaskForm: FC<CreateTaskFormProps> = ({
         description: data.description,
         subTasks: data.subTasks ?? [],
         taskType: data.taskType,
-        assignUser: data.assignUser,
+        assignUser: data.assignUser ?? undefined,
       });
     }
 
@@ -228,7 +229,7 @@ export const CreateTaskForm: FC<CreateTaskFormProps> = ({
               <Select
                 styles={customStyles}
                 menuPlacement='top'
-                options={typeOptions}
+                options={typeOptions as any}
                 value={value}
                 name={name}
                 onChange={onChange}

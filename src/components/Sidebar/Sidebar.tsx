@@ -3,6 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { FaEye, FaEyeSlash, FaBars, FaColumns, FaCog } from 'react-icons/fa';
 import './Sidebar.scss';
 
+const Dashboard = () => import('./../../pages/Board');
+const Settings = () => import('./../../pages/Settings');
+
 export const Sidebar = () => {
   const [isHidden, setIsHidden] = useState(false);
   const handleClick = () => {
@@ -21,6 +24,8 @@ export const Sidebar = () => {
             `${isActive ? 'active' : ''} sidebar-link`
           }
           to='dashboard'
+          onMouseEnter={Dashboard}
+          onFocus={Dashboard}
         >
           <FaColumns /> {!isHidden && 'Dashboard'}
         </NavLink>
@@ -29,6 +34,8 @@ export const Sidebar = () => {
             `${isActive ? 'active' : ''} sidebar-link`
           }
           to='settings'
+          onMouseEnter={Settings}
+          onFocus={Settings}
         >
           <FaCog /> {!isHidden && 'Settings'}
         </NavLink>
