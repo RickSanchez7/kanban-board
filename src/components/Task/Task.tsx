@@ -84,27 +84,29 @@ export const Task: FC<TaskProps> = ({ task, snapshot }) => {
 
   return (
     <Modal>
-      <div
-        className={`task ${snapshot.isDragging ? 'draggable' : ''}`}
-        id={task.id}
-      >
-        <div className='task-left-side'>
-          <h4>{task.title}</h4>
-          {!!subTaskLength && (
-            <p className='task-subtasks'>
-              {numberOfSubTasksChecked()} of {subTaskLength} subtasks
-            </p>
-          )}
-        </div>
-        <div className='task-right-side'>
-          <div className='task-dropdown'>
-            <Dropdown itemlist={itemlist} />
+      <Modal.Open opens='view-task'>
+        <div
+          className={`task ${snapshot.isDragging ? 'draggable' : ''}`}
+          id={task.id}
+        >
+          <div className='task-left-side'>
+            <h4>{task.title}</h4>
+            {!!subTaskLength && (
+              <p className='task-subtasks'>
+                {numberOfSubTasksChecked()} of {subTaskLength} subtasks
+              </p>
+            )}
           </div>
-          {task.assignUser && (
-            <div className='task-user'>{task.assignUser?.name[0]}</div>
-          )}
+          <div className='task-right-side'>
+            <div className='task-dropdown'>
+              <Dropdown itemlist={itemlist} />
+            </div>
+            {task.assignUser && (
+              <div className='task-user'>{task.assignUser?.name[0]}</div>
+            )}
+          </div>
         </div>
-      </div>
+      </Modal.Open>
       <Modal.Window name='view-task'>
         <ViewTask
           task={task}
