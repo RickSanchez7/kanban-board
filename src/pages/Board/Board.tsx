@@ -22,16 +22,16 @@ export const Board = () => {
 
   useLayoutEffect(() => {
     try {
-      // const localTasks = localStorage.getItem('tasks');
-      // const localColumns = localStorage.getItem('columns');
-      // if (localTasks) {
-      //   const parsedTasks = JSON.parse(localTasks);
-      //   setTasks(parsedTasks);
-      // }
-      // if (localColumns) {
-      //   const parsedColumns = JSON.parse(localColumns);
-      //   setColumns(parsedColumns);
-      // }
+      const localTasks = localStorage.getItem('tasks');
+      const localColumns = localStorage.getItem('columns');
+      if (localTasks) {
+        const parsedTasks = JSON.parse(localTasks);
+        setTasks(parsedTasks);
+      }
+      if (localColumns) {
+        const parsedColumns = JSON.parse(localColumns);
+        setColumns(parsedColumns);
+      }
     } catch {
       console.error('error retriving from local storage');
     }
