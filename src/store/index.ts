@@ -47,6 +47,9 @@ export const useTaskStore = create<TasksState>((set, get) => ({
       if (taskIndex !== -1) {
         const updatedTasks = [...state.tasks];
         updatedTasks[taskIndex] = updatedTask;
+
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+
         return { tasks: updatedTasks };
       }
 
